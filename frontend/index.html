@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3-Tier Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4f8;
+            text-align: center;
+            padding: 80px 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 40px 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px #0002;
+        }
+        h1 { color: #16803c; }
+        p { font-size: 18px; }
+        button {
+            padding: 12px 22px;
+            background: #1769d2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        #status { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>3-Tier Application</h1>
+        <h2>Deployment Successful!</h2>
+        <p>Presentation Layer: Nginx</p>
+        <p>Application Layer: Node.js Backend</p>
+        <p>Data Layer: PostgreSQL Database</p>
+
+        <button onclick="checkStatus()">Check Application Status</button>
+        <p id="status">Click the button to verify all tiers.</p>
+    </div>
+
+    <script>
+        async function checkStatus() {
+            const status = document.getElementById("status");
+            status.textContent = "Checking application...";
+
+            try {
+                const response = await fetch("/api/health");
+                const data = await response.json();
+
+                if (response.ok && data.database === "connected") {
+                    status.textContent =
+                        "Success! Backend and Database are connected.";
+                } else {
+                    status.textContent = "Application check failed.";
+                }
+            } catch (error) {
+                status.textContent = "Unable to connect to the backend.";
+            }
+        }
+    </script>
+</body>
+</html>
